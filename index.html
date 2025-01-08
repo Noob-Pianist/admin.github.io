@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Checklist</title>
+    <link rel="icon" href="Website/assets/img/icon.png" type="image/png">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4, #fbc2eb);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+		
+        #current-time {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        #custom-alert {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            font-size: 1.2rem;
+            z-index: 9999;
+            text-align: center;
+        }
+
+        #custom-alert button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #custom-alert button:hover {
+            background-color: #2980b9;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-shadow: 2px 2px #ff9a9e;
+        }
+
+        /* Table Styles */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background-color: #ffc107;
+            color: #333;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ffe9c4;
+        }
+
+        td a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .action-btn {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .complete-btn {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .complete-btn:hover {
+            background: #45a049;
+        }
+
+        .delete-btn {
+            background: #ff4d4f;
+            color: #fff;
+        }
+
+        .delete-btn:hover {
+            background: #ff1a1c;
+        }
+
+        /* Form Styles */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .form-container h2 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .form-container input,
+        .form-container button {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            background: #3498db;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background: #2d89d0;
+        }
+
+        .jiggle {
+            animation: jiggle 0.5s ease-out;
+        }
+
+        @keyframes jiggle {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        /* Stylish Progress */
+        select {
+            font-size: 1rem;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            table,
+            .form-container {
+                width: 95%;
+            }
+
+            th,
+            td {
+                padding: 10px;
+            }
+
+            .form-container h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body style="background-color: #333;">
+    <div style="position: absolute; top: 20px; right: 20px;">
+        <img src="Website/assets/img/icon.png" alt="Noob Pianist Logo" style="width: 100px; height: auto;">
+    </div>
+
+    <h1>Music Checklist</h1>
+	
+    <!-- Custom alert box -->
+    <div id="custom-alert">
+        <span id="alert-message"></span>
+        <br>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+
+    <table id="music-table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Music Title</th>
+                <th>Artist</th>
+                <th>YouTube Link</th>
+                <th>Progress</th>
+                <th>Date Added</th>
+                <th>Complete On</th>
+                <th>Actions</th>
+                <th>Complete</th>
+                <th>Tasks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic rows will be added here -->
+        </tbody>
+    </table>
+
+    <div class="form-container">
+        <h2>Add New Music</h2>
+        <input type="text" id="title" placeholder="Music Title" required>
+        <input type="text" id="artist" placeholder="Artist" required>
+        <input type="url" id="youtube" placeholder="YouTube Link" required>
+        <input type="date" id="date-added">
+        <button onclick="addRow()">Add Music</button>
+    </div>
+
+    <footer style="background-color: #2c3e50; color: #ecf0f1; padding: 20px 0; margin-top: 40px; text-align: center;">
+        <div style="margin-bottom: 20px;">
+            <a href="https://sociabuzz.com/noob_pianist/tribe" style="background-color: #1abc9c; color: white; padding: 10px 20px; text-decoration: none; font-size: 1.1rem; border-radius: 5px;" target="_blank">Donate to Noob Pianist</a>
+        </div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <div class="col" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; font-size: 1.5rem; font-weight: bold;">Noob Pianist</h3>
+                <p style="margin: 0; font-size: 1rem;">Free piano sheet music forever.</p>
+            </div>
+        </div>
+        <hr style="border: none; height: 1px; background-color: #7f8c8d; margin: 20px 0;">
+        <p style="margin: 0; font-size: 0.9rem;">Copyright © 2024 - <span id="currentYear"></span> Noob Pianist</p>
+    </footer>
+
+    <script>
+		// Sample music data array
+		let musicData = [];
+
+		// Function to save music data to local storage
+		function saveToLocalStorage() {
+			localStorage.setItem('musicData', JSON.stringify(musicData));
+		}			
+
+		// Function to load music data from local storage
+		function loadFromLocalStorage() {
+			const data = localStorage.getItem('musicData');
+			if (data) {
+				musicData = JSON.parse(data);
+				renderTable();
+			}
+		}
+
+		// Function to add a new row to the table
+		function addRow() {
+			const title = document.getElementById('title').value;
+			const artist = document.getElementById('artist').value;
+			const youtube = document.getElementById('youtube').value;
+			const dateAdded = document.getElementById('date-added').value || new Date().toISOString().split('T')[0];
+
+			if (title && artist && youtube) {
+				// Add the new music data to the array
+				musicData.push({
+					title,
+					artist,
+					youtube,
+					dateAdded,
+					progress: '⛔️',  // Default progress as 'Not Started'
+					completeOn: '',
+					tasks: {
+						addLyrics: false,
+						addChords: false,
+						refineMusic: false,
+						checkMusic: false,
+						generatePreview: false
+					}
+				});
+
+				// Save to local storage
+				saveToLocalStorage();
+
+				// Clear form inputs
+				document.getElementById('title').value = '';
+				document.getElementById('artist').value = '';
+				document.getElementById('youtube').value = '';
+				document.getElementById('date-added').value = '';
+
+				// Re-render table
+				renderTable();
+			} else {
+				showAlert("Please fill in all fields!");
+			}
+		}
+
+		// Function to delete a row from the table
+		function deleteRow(index) {
+			musicData.splice(index, 1); // Remove item from the array
+			saveToLocalStorage(); // Save updated data
+			renderTable(); // Re-render the table
+			showAlert("Music deleted successfully!");
+		}
+
+		// Function to mark music as complete
+		function completeRow(index) {
+			musicData[index].progress = '✅'; // Mark as complete
+			musicData[index].completeOn = new Date().toLocaleDateString(); // Add today's date as completion date
+			saveToLocalStorage();
+			renderTable();
+			showAlert("Music marked as completed!");
+		}
+
+		// Function to toggle progress (Not Started, In Progress, Completed)
+		function toggleProgress(index) {
+			const progressSelect = document.getElementById(`progress-${index}`);
+			const newProgress = progressSelect.value;
+			musicData[index].progress = newProgress;
+
+			// If progress is 'Completed', set the completion date to today's date
+			if (newProgress === '✅') {
+				musicData[index].completeOn = new Date().toLocaleDateString(); // Add today's date as completion date
+			} else {
+				musicData[index].completeOn = ''; // Clear completion date if progress is not 'Completed'
+			}
+
+			saveToLocalStorage();
+			renderTable();
+		}
+
+		// Function to toggle task status (checked or unchecked)
+		function toggleTask(index, taskName) {
+			musicData[index].tasks[taskName] = !musicData[index].tasks[taskName];
+			saveToLocalStorage();
+			renderTable();
+		}
+
+		// Function to render the table from the musicData array
+		function renderTable() {
+			const tbody = document.getElementById("music-table").querySelector("tbody");
+			tbody.innerHTML = ""; // Clear the table
+
+			musicData.forEach((item, index) => {
+				const row = document.createElement("tr");
+
+				// Format date as DD/MM/YYYY
+				const dateAdded = new Date(item.dateAdded);
+				const formattedDateAdded = `${String(dateAdded.getDate()).padStart(2, '0')}/${String(dateAdded.getMonth() + 1).padStart(2, '0')}/${dateAdded.getFullYear()}`;
+				const completeOn = item.completeOn ? new Date(item.completeOn) : null;
+				const formattedCompleteOn = completeOn ? `${String(completeOn.getDate()).padStart(2, '0')}/${String(completeOn.getMonth() + 1).padStart(2, '0')}/${completeOn.getFullYear()}` : '-';
+
+				row.innerHTML = `
+					<td>${index + 1}</td>
+					<td>${item.title}</td>
+					<td>${item.artist}</td>
+					<td><a href="${item.youtube}" target="_blank">Link</a></td>
+					<td>
+						<select id="progress-${index}" onchange="toggleProgress(${index})">
+							<option value="⛔️" ${item.progress === '⛔️' ? 'selected' : ''}>Not Started</option>
+							<option value="⏱️" ${item.progress === '⏱️' ? 'selected' : ''}>In Progress</option>
+							<option value="✅" ${item.progress === '✅' ? 'selected' : ''}>Completed</option>
+						</select>
+					</td>
+					<td>${formattedDateAdded}</td>
+					<td>${formattedCompleteOn}</td>
+					<td>
+						<button class="action-btn delete-btn" onclick="deleteRow(${index})">Delete</button>
+					</td>
+					<td>${item.progress === '✅' ? 'Yes' : 'No'}</td>
+					<td>
+						<label>
+							<input type="checkbox" ${item.tasks.addLyrics ? "checked" : ""} onclick="toggleTask(${index}, 'addLyrics')"> Add Lyrics
+						</label>
+						<label>
+							<input type="checkbox" ${item.tasks.addChords ? "checked" : ""} onclick="toggleTask(${index}, 'addChords')"> Add Chords
+						</label>
+						<label>
+							<input type="checkbox" ${item.tasks.refineMusic ? "checked" : ""} onclick="toggleTask(${index}, 'refineMusic')"> Refine Music
+						</label>
+						<label>
+							<input type="checkbox" ${item.tasks.checkMusic ? "checked" : ""} onclick="toggleTask(${index}, 'checkMusic')"> Check Music
+						</label>
+						<label>
+							<input type="checkbox" ${item.tasks.generatePreview ? "checked" : ""} onclick="toggleTask(${index}, 'generatePreview')"> Generate Preview
+						</label>
+					</td>
+				`;
+
+				tbody.appendChild(row);
+			});
+		}
+
+		// Function to show custom alert messages
+		function showAlert(message) {
+			const alertBox = document.getElementById('custom-alert');
+			const alertMessage = document.getElementById('alert-message');
+			alertMessage.textContent = message;
+			alertBox.style.display = 'block';
+			document.querySelector('body').classList.add('jiggle');
+		}
+
+		// Function to close the alert box
+		function closeAlert() {
+			const alertBox = document.getElementById('custom-alert');
+			alertBox.style.display = 'none';
+			document.querySelector('body').classList.remove('jiggle');
+		}
+
+		// Initialize the page by loading the data from localStorage
+		window.onload = function () {
+			loadFromLocalStorage();
+		}
+
+    </script>
+
+</body>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCDahGvW_c7pnROmxYDI0HAGdaaxsdnb3M",
+    authDomain: "music-list-1a5e7.firebaseapp.com",
+    projectId: "music-list-1a5e7",
+    storageBucket: "music-list-1a5e7.firebasestorage.app",
+    messagingSenderId: "1021254873920",
+    appId: "1:1021254873920:web:bb335f85a63f83ed7d00a5",
+    measurementId: "G-XYLJ2NGXGX"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</html>
