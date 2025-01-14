@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Checklist</title>
-    <link rel="icon" href="Big.png" type="image/png">
+    <link rel="icon" href="Website/assets/img/icon.png" type="image/png">
     <style>
         /* General Styles */
         body {
@@ -14,12 +14,13 @@
             padding: 0;
             color: #333;
         }
-		
-        #current-time {
+
+        h1 {
             text-align: center;
-            font-size: 1.2rem;
-            color: #fff;
-            margin-top: 20px;
+            margin: 20px 0;
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-shadow: 2px 2px #ff9a9e;
         }
 
         #custom-alert {
@@ -47,22 +48,8 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 5px;
         }
 
-        #custom-alert button:hover {
-            background-color: #2980b9;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 2.5rem;
-            color: #ffffff;
-            text-shadow: 2px 2px #ff9a9e;
-        }
-
-        /* Table Styles */
         table {
             width: 90%;
             margin: 20px auto;
@@ -85,54 +72,6 @@
             font-weight: bold;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #ffe9c4;
-        }
-
-        td a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        td a:hover {
-            text-decoration: underline;
-        }
-
-        /* Buttons */
-        .action-btn {
-            padding: 8px 12px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .complete-btn {
-            background: #4caf50;
-            color: #fff;
-        }
-
-        .complete-btn:hover {
-            background: #45a049;
-        }
-
-        .delete-btn {
-            background: #ff4d4f;
-            color: #fff;
-        }
-
-        .delete-btn:hover {
-            background: #ff1a1c;
-        }
-
-        /* Form Styles */
         .form-container {
             max-width: 800px;
             margin: 0 auto;
@@ -150,8 +89,7 @@
             text-align: center;
         }
 
-        .form-container input,
-        .form-container button {
+        .form-container input, .form-container button {
             display: block;
             width: calc(100% - 20px);
             margin: 10px auto;
@@ -165,72 +103,23 @@
             background: #3498db;
             color: #fff;
             cursor: pointer;
-            transition: background 0.3s ease;
         }
 
         .form-container button:hover {
             background: #2d89d0;
         }
-
-        .jiggle {
-            animation: jiggle 0.5s ease-out;
-        }
-
-        @keyframes jiggle {
-            0% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-10px);
-            }
-
-            50% {
-                transform: translateX(10px);
-            }
-
-            75% {
-                transform: translateX(-10px);
-            }
-
-            100% {
-                transform: translateX(0);
-            }
-        }
-
-        /* Stylish Progress */
-        select {
-            font-size: 1rem;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        /* Responsive Design */
-        @media screen and (max-width: 768px) {
-            table,
-            .form-container {
-                width: 95%;
-            }
-
-            th,
-            td {
-                padding: 10px;
-            }
-
-            .form-container h2 {
-                font-size: 1.5rem;
-            }
-        }
     </style>
 </head>
-<body style="background-color: #333;">
-    <div style="position: absolute; top: 20px; right: 20px;">
-        <img src="Big.png" alt="Noob Pianist Logo" style="width: 100px; height: auto;">
-    </div>
+<body>
 
-    <h1>Music Checklist</h1>
+	<div style="text-align: center; margin: 20px;">
+        <button onclick="exportToJson()">Export to JSON</button>
+        <label for="file-input" style="cursor: pointer; color: #3498db; text-decoration: underline;">Import from JSON</label>
+        <input type="file" id="file-input" accept=".json" style="display: none;">
+    </div>	
 	
+    <h1>Music Checklist</h1>
+
     <!-- Custom alert box -->
     <div id="custom-alert">
         <span id="alert-message"></span>
@@ -254,7 +143,6 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Dynamic rows will be added here -->
         </tbody>
     </table>
 
@@ -267,7 +155,13 @@
         <button onclick="addRow()">Add Music</button>
     </div>
 
-    <footer style="background-color: #2c3e50; color: #ecf0f1; padding: 20px 0; margin-top: 40px; text-align: center;">
+    <div style="text-align: center; margin: 20px;">
+        <button onclick="exportToJson()">Export to JSON</button>
+        <label for="file-input" style="cursor: pointer; color: #3498db; text-decoration: underline;">Import from JSON</label>
+        <input type="file" id="file-input" accept=".json" style="display: none;">
+    </div>
+	
+	<footer style="background-color: #2c3e50; color: #ecf0f1; padding: 20px 0; margin-top: 40px; text-align: center;">
         <div style="margin-bottom: 20px;">
             <a href="https://sociabuzz.com/noob_pianist/tribe" style="background-color: #1abc9c; color: white; padding: 10px 20px; text-decoration: none; font-size: 1.1rem; border-radius: 5px;" target="_blank">Donate to Noob Pianist</a>
         </div>
@@ -278,210 +172,247 @@
             </div>
         </div>
         <hr style="border: none; height: 1px; background-color: #7f8c8d; margin: 20px 0;">
-        <p style="margin: 0; font-size: 0.9rem;">Copyright © 2024 - <span id="currentYear"></span> Noob Pianist</p>
+        <p style="margin: 0; font-size: 0.9rem;">Copyright © 2024 - <span id="currentYear"></span></p>
     </footer>
 
     <script>
-		// Sample music data array
-		let musicData = [];
+        let musicData = [];
 
-		// Function to save music data to local storage
-		function saveToLocalStorage() {
-			localStorage.setItem('musicData', JSON.stringify(musicData));
-		}			
+        function addRow() {
+            const title = document.getElementById('title').value;
+            const artist = document.getElementById('artist').value;
+            const youtube = document.getElementById('youtube').value;
+            const dateAdded = document.getElementById('date-added').value || new Date().toISOString().split('T')[0];
 
-		// Function to load music data from local storage
-		function loadFromLocalStorage() {
-			const data = localStorage.getItem('musicData');
-			if (data) {
-				musicData = JSON.parse(data);
-				renderTable();
+            if (title && artist && youtube) {
+                musicData.push({
+                    title,
+                    artist,
+                    youtube,
+                    dateAdded,
+                    progress: '⛔️',
+                    completeOn: '',
+                    tasks: {
+                        addLyrics: false,
+                        addChords: false,
+                        refineMusic: false,
+                        checkMusic: false,
+                        generatePreview: false
+                    }
+                });
+
+                document.getElementById('title').value = '';
+                document.getElementById('artist').value = '';
+                document.getElementById('youtube').value = '';
+                document.getElementById('date-added').value = '';
+
+                renderTable();
+            } else {
+                showAlert("Please fill in all fields!");
+            }
+        }
+
+        function deleteRow(index) {
+            musicData.splice(index, 1);
+            renderTable();
+            showAlert("Music deleted successfully!");
+        }
+
+        function toggleProgress(index) {
+            const progressSelect = document.getElementById(`progress-${index}`);
+            const newProgress = progressSelect.value;
+            musicData[index].progress = newProgress;
+
+            if (newProgress === '✅') {
+                musicData[index].completeOn = new Date().toLocaleDateString();
+            } else {
+                musicData[index].completeOn = '';
+            }
+
+            renderTable();
+        }
+
+        function toggleTask(index, taskName) {
+            musicData[index].tasks[taskName] = !musicData[index].tasks[taskName];
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("music-table").querySelector("tbody");
+            tbody.innerHTML = "";
+
+            musicData.forEach((item, index) => {
+                const row = document.createElement("tr");
+                const dateAdded = new Date(item.dateAdded);
+                const formattedDateAdded = `${String(dateAdded.getDate()).padStart(2, '0')}/${String(dateAdded.getMonth() + 1).padStart(2, '0')}/${dateAdded.getFullYear()}`;
+                const completeOn = item.completeOn ? new Date(item.completeOn) : null;
+                const formattedCompleteOn = completeOn ? `${String(completeOn.getDate()).padStart(2, '0')}/${String(completeOn.getMonth() + 1).padStart(2, '0')}/${completeOn.getFullYear()}` : '-';
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.title}</td>
+                    <td>${item.artist}</td>
+                    <td><a href="${item.youtube}" target="_blank">Link</a></td>
+                    <td>
+                        <select id="progress-${index}" onchange="toggleProgress(${index})">
+                            <option value="⛔️" ${item.progress === '⛔️' ? 'selected' : ''}>Not Started</option>
+                            <option value="⏱️" ${item.progress === '⏱️' ? 'selected' : ''}>In Progress</option>
+                            <option value="✅" ${item.progress === '✅' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td>${formattedDateAdded}</td>
+                    <td>${formattedCompleteOn}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteRow(${index})">Delete</button>
+                    </td>
+                    <td>${item.progress === '✅' ? 'Yes' : 'No'}</td>
+                    <td>
+                        <label><input type="checkbox" ${item.tasks.addLyrics ? "checked" : ""} onclick="toggleTask(${index}, 'addLyrics')"> Add Lyrics</label>
+                        <label><input type="checkbox" ${item.tasks.addChords ? "checked" : ""} onclick="toggleTask(${index}, 'addChords')"> Add Chords</label>
+                        <label><input type="checkbox" ${item.tasks.refineMusic ? "checked" : ""} onclick="toggleTask(${index}, 'refineMusic')"> Refine Music</label>
+                        <label><input type="checkbox" ${item.tasks.checkMusic ? "checked" : ""} onclick="toggleTask(${index}, 'checkMusic')"> Check Music</label>
+                        <label><input type="checkbox" ${item.tasks.generatePreview ? "checked" : ""} onclick="toggleTask(${index}, 'generatePreview')"> Generate Preview</label>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function showAlert(message) {
+            const alertBox = document.getElementById('custom-alert');
+            const alertMessage = document.getElementById('alert-message');
+            alertMessage.textContent = message;
+            alertBox.style.display = 'block';
+        }
+
+        function closeAlert() {
+            const alertBox = document.getElementById('custom-alert');
+            alertBox.style.display = 'none';
+        }
+
+        function exportToJson() {
+            const dataStr = JSON.stringify(musicData, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "music_checklist.json";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importFromJson(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (Array.isArray(importedData)) {
+                            musicData = importedData;
+                            renderTable();
+                            showAlert("Data imported successfully!");
+                        } else {
+                            showAlert("Invalid JSON format.");
+                        }
+                    } catch (error) {
+                        showAlert("Error reading file.");
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        document.getElementById("file-input").addEventListener("change", importFromJson);
+		
+		// Function to update the current year in the footer
+		function updateCurrentYear() {
+			const currentYearSpan = document.getElementById('currentYear');
+			if (currentYearSpan) {
+				const currentYear = new Date().getFullYear();
+				currentYearSpan.textContent = currentYear;
 			}
 		}
 
-		// Function to add a new row to the table
-		function addRow() {
-			const title = document.getElementById('title').value;
-			const artist = document.getElementById('artist').value;
-			const youtube = document.getElementById('youtube').value;
-			const dateAdded = document.getElementById('date-added').value || new Date().toISOString().split('T')[0];
-
-			if (title && artist && youtube) {
-				// Add the new music data to the array
-				musicData.push({
-					title,
-					artist,
-					youtube,
-					dateAdded,
-					progress: '⛔️',  // Default progress as 'Not Started'
-					completeOn: '',
-					tasks: {
-						addLyrics: false,
-						addChords: false,
-						refineMusic: false,
-						checkMusic: false,
-						generatePreview: false
-					}
-				});
-
-				// Save to local storage
-				saveToLocalStorage();
-
-				// Clear form inputs
-				document.getElementById('title').value = '';
-				document.getElementById('artist').value = '';
-				document.getElementById('youtube').value = '';
-				document.getElementById('date-added').value = '';
-
-				// Re-render table
-				renderTable();
-			} else {
-				showAlert("Please fill in all fields!");
-			}
-		}
-
-		// Function to delete a row from the table
-		function deleteRow(index) {
-			musicData.splice(index, 1); // Remove item from the array
-			saveToLocalStorage(); // Save updated data
-			renderTable(); // Re-render the table
-			showAlert("Music deleted successfully!");
-		}
-
-		// Function to mark music as complete
-		function completeRow(index) {
-			musicData[index].progress = '✅'; // Mark as complete
-			musicData[index].completeOn = new Date().toLocaleDateString(); // Add today's date as completion date
-			saveToLocalStorage();
-			renderTable();
-			showAlert("Music marked as completed!");
-		}
-
-		// Function to toggle progress (Not Started, In Progress, Completed)
-		function toggleProgress(index) {
-			const progressSelect = document.getElementById(`progress-${index}`);
-			const newProgress = progressSelect.value;
-			musicData[index].progress = newProgress;
-
-			// If progress is 'Completed', set the completion date to today's date
-			if (newProgress === '✅') {
-				musicData[index].completeOn = new Date().toLocaleDateString(); // Add today's date as completion date
-			} else {
-				musicData[index].completeOn = ''; // Clear completion date if progress is not 'Completed'
-			}
-
-			saveToLocalStorage();
-			renderTable();
-		}
-
-		// Function to toggle task status (checked or unchecked)
-		function toggleTask(index, taskName) {
-			musicData[index].tasks[taskName] = !musicData[index].tasks[taskName];
-			saveToLocalStorage();
-			renderTable();
-		}
-
-		// Function to render the table from the musicData array
-		function renderTable() {
-			const tbody = document.getElementById("music-table").querySelector("tbody");
-			tbody.innerHTML = ""; // Clear the table
-
-			musicData.forEach((item, index) => {
-				const row = document.createElement("tr");
-
-				// Format date as DD/MM/YYYY
-				const dateAdded = new Date(item.dateAdded);
-				const formattedDateAdded = `${String(dateAdded.getDate()).padStart(2, '0')}/${String(dateAdded.getMonth() + 1).padStart(2, '0')}/${dateAdded.getFullYear()}`;
-				const completeOn = item.completeOn ? new Date(item.completeOn) : null;
-				const formattedCompleteOn = completeOn ? `${String(completeOn.getDate()).padStart(2, '0')}/${String(completeOn.getMonth() + 1).padStart(2, '0')}/${completeOn.getFullYear()}` : '-';
-
-				row.innerHTML = `
-					<td>${index + 1}</td>
-					<td>${item.title}</td>
-					<td>${item.artist}</td>
-					<td><a href="${item.youtube}" target="_blank">Link</a></td>
-					<td>
-						<select id="progress-${index}" onchange="toggleProgress(${index})">
-							<option value="⛔️" ${item.progress === '⛔️' ? 'selected' : ''}>Not Started</option>
-							<option value="⏱️" ${item.progress === '⏱️' ? 'selected' : ''}>In Progress</option>
-							<option value="✅" ${item.progress === '✅' ? 'selected' : ''}>Completed</option>
-						</select>
-					</td>
-					<td>${formattedDateAdded}</td>
-					<td>${formattedCompleteOn}</td>
-					<td>
-						<button class="action-btn delete-btn" onclick="deleteRow(${index})">Delete</button>
-					</td>
-					<td>${item.progress === '✅' ? 'Yes' : 'No'}</td>
-					<td>
-						<label>
-							<input type="checkbox" ${item.tasks.addLyrics ? "checked" : ""} onclick="toggleTask(${index}, 'addLyrics')"> Add Lyrics
-						</label>
-						<label>
-							<input type="checkbox" ${item.tasks.addChords ? "checked" : ""} onclick="toggleTask(${index}, 'addChords')"> Add Chords
-						</label>
-						<label>
-							<input type="checkbox" ${item.tasks.refineMusic ? "checked" : ""} onclick="toggleTask(${index}, 'refineMusic')"> Refine Music
-						</label>
-						<label>
-							<input type="checkbox" ${item.tasks.checkMusic ? "checked" : ""} onclick="toggleTask(${index}, 'checkMusic')"> Check Music
-						</label>
-						<label>
-							<input type="checkbox" ${item.tasks.generatePreview ? "checked" : ""} onclick="toggleTask(${index}, 'generatePreview')"> Generate Preview
-						</label>
-					</td>
-				`;
-
-				tbody.appendChild(row);
-			});
-		}
-
-		// Function to show custom alert messages
-		function showAlert(message) {
-			const alertBox = document.getElementById('custom-alert');
-			const alertMessage = document.getElementById('alert-message');
-			alertMessage.textContent = message;
-			alertBox.style.display = 'block';
-			document.querySelector('body').classList.add('jiggle');
-		}
-
-		// Function to close the alert box
-		function closeAlert() {
-			const alertBox = document.getElementById('custom-alert');
-			alertBox.style.display = 'none';
-			document.querySelector('body').classList.remove('jiggle');
-		}
-
-		// Initialize the page by loading the data from localStorage
+		// Call the function to update the year when the page loads
 		window.onload = function () {
-			loadFromLocalStorage();
-		}
+			updateCurrentYear();
+		};
 
     </script>
+	
+	<script type="module">
+		// Import the functions you need from the Firebase SDKs
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+		import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
+		import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-    <script type="module">
-	  // Import the functions you need from the SDKs you need
-	  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-	  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
-	  // TODO: Add SDKs for Firebase products that you want to use
-	  // https://firebase.google.com/docs/web/setup#available-libraries
+		// Firebase configuration
+		const firebaseConfig = {
+			apiKey: "AIzaSyCDahGvW_c7pnROmxYDI0HAGdaaxsdnb3M",
+			authDomain: "music-list-1a5e7.firebaseapp.com",
+			projectId: "music-list-1a5e7",
+			storageBucket: "music-list-1a5e7.firebasestorage.app",
+			messagingSenderId: "1021254873920",
+			appId: "1:1021254873920:web:bb335f85a63f83ed7d00a5",
+			measurementId: "G-XYLJ2NGXGX"
+		};
+
+		// Initialize Firebase
+		const app = initializeApp(firebaseConfig);
+		const analytics = getAnalytics(app);
+
+		// Initialize Firestore
+		const db = getFirestore(app);
+	</script>
 	
-	  // Your web app's Firebase configuration
-	  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-	  const firebaseConfig = {
-	    apiKey: "AIzaSyCDahGvW_c7pnROmxYDI0HAGdaaxsdnb3M",
-	    authDomain: "music-list-1a5e7.firebaseapp.com",
-	    projectId: "music-list-1a5e7",
-	    storageBucket: "music-list-1a5e7.firebasestorage.app",
-	    messagingSenderId: "1021254873920",
-	    appId: "1:1021254873920:web:bb335f85a63f83ed7d00a5",
-	    measurementId: "G-XYLJ2NGXGX"
-	  };
-	
-	  // Initialize Firebase
-	  const app = initializeApp(firebaseConfig);
-	  const analytics = getAnalytics(app);
-   </script>
+	<script>
+		// Function to import JSON and push data to Firebase
+		async function importFromJson(event) {
+			const file = event.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = async function (e) {
+					try {
+						const importedData = JSON.parse(e.target.result);
+						if (Array.isArray(importedData)) {
+							for (let i = 0; i < importedData.length; i++) {
+								const item = importedData[i];
+								await pushToFirebase(item); // Upload each item to Firebase
+							}
+
+							musicData = importedData; // Update local music data
+							renderTable(); // Re-render the table
+							showAlert("Data imported and uploaded to Firebase successfully!");
+						} else {
+							showAlert("Invalid JSON format.");
+						}
+					} catch (error) {
+						showAlert("Error reading file.");
+						console.error("File parsing error:", error);
+					}
+				};
+				reader.readAsText(file);
+			}
+		}
+
+		// Function to upload a single item to Firebase
+		async function pushToFirebase(item) {
+			try {
+				// Save item as a document in the "musicChecklist" collection
+				const docRef = doc(db, "musicChecklist", item.title); // Use the title as document ID
+				await setDoc(docRef, item);
+				console.log(`Uploaded: ${item.title}`);
+			} catch (error) {
+				console.error("Error uploading to Firebase:", error);
+				showAlert("Error uploading to Firebase.");
+			}
+		}
+
+		// Add event listener for the file input
+		document.getElementById("file-input").addEventListener("change", importFromJson);
+	</script>
 
 </body>
 </html>
